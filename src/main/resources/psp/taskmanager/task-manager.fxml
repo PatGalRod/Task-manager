@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<TabPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="psp.taskmanager.TaskManagerController" tabClosingPolicy="UNAVAILABLE">
+
+    <!-- TAB 1: processes launched by the application -->
+    <Tab text="My processes">
+        <BorderPane>
+            <top>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <Label text="Command:"/>
+                    <TextField fx:id="commandField" HBox.hgrow="ALWAYS" onAction="#onLaunch"
+                               promptText="e.g. ping -t localhost (Windows) / ping localhost (Linux, macOS)"/>
+                    <Button text="Launch" onAction="#onLaunch" defaultButton="true"/>
+                </HBox>
+            </top>
+
+            <center>
+                <TableView fx:id="processTable">
+                    <columns>
+                        <TableColumn fx:id="pidColumn" text="PID" prefWidth="80"/>
+                        <TableColumn fx:id="commandColumn" text="Command" prefWidth="360"/>
+                        <TableColumn fx:id="startColumn" text="Start time" prefWidth="100"/>
+                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
+                        <TableColumn fx:id="exitCodeColumn" text="Exit code" prefWidth="80"/>
+                    </columns>
+                </TableView>
+            </center>
+
+            <right>
+                <VBox spacing="10">
+                    <padding><Insets top="0" right="10" bottom="10" left="0"/></padding>
+                    <Button text="Stop" onAction="#onStop" maxWidth="Infinity"/>
+                    <Button text="Force kill" onAction="#onForceKill" maxWidth="Infinity"/>
+                    <Button text="Refresh status" onAction="#onRefresh" maxWidth="Infinity"/>
+                    <Button text="Show log" onAction="#onShowLog" maxWidth="Infinity"/>
+                    <Button text="Remove finished" onAction="#onRemoveFinished" maxWidth="Infinity"/>
+                </VBox>
+            </right>
+
+            <bottom>
+                <VBox spacing="5">
+                    <padding><Insets top="0" right="10" bottom="10" left="10"/></padding>
+                    <Label fx:id="logLabel" text="Log of the selected process:"/>
+                    <TextArea fx:id="logArea" editable="false" prefRowCount="8" wrapText="false"
+                              style="-fx-font-family: monospace;"/>
+                </VBox>
+            </bottom>
+        </BorderPane>
+    </Tab>
+
+    <!-- TAB 2 (optional part): all the processes of the system -->
+    <Tab text="System processes">
+        <BorderPane>
+            <top>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <Label text="Filter:"/>
+                    <TextField fx:id="filterField" HBox.hgrow="ALWAYS" onAction="#onRefreshSystem"
+                               promptText="Part of the command, e.g. java"/>
+                    <Button text="Refresh" onAction="#onRefreshSystem"/>
+                    <Button text="Kill selected" onAction="#onKillSystem"/>
+                </HBox>
+            </top>
+            <center>
+                <TableView fx:id="systemTable">
+                    <columns>
+                        <TableColumn fx:id="sysPidColumn" text="PID" prefWidth="80"/>
+                        <TableColumn fx:id="sysParentColumn" text="Parent PID" prefWidth="90"/>
+                        <TableColumn fx:id="sysUserColumn" text="User" prefWidth="120"/>
+                        <TableColumn fx:id="sysCommandColumn" text="Command" prefWidth="560"/>
+                    </columns>
+                </TableView>
+            </center>
+            <bottom>
+                <Label fx:id="systemInfoLabel" text="Press Refresh to load the processes.">
+                    <padding><Insets top="5" right="10" bottom="10" left="10"/></padding>
+                </Label>
+            </bottom>
+        </BorderPane>
+    </Tab>
+</TabPane>
